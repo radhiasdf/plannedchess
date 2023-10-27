@@ -18,3 +18,6 @@ for piece_libname, svg_name in (("K", "kw"),
 		print("Piece image not found")
 
 # By Cburnett - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=1499806
+
+
+numCoordToChessCoord = {}
