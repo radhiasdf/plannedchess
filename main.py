@@ -1,6 +1,6 @@
 import chess
 import pygame as pg
-from assets import pieceImgs
+from assets import *
 
 pg.init()
 font = pg.font.Font(None, 36)
@@ -48,10 +48,6 @@ def draw_piece(piece_key, coord):
 def drawAndReturnMoves():
 	# Get mouse position
 	mousepos = pg.mouse.get_pos()
-	text_surface = font.render(str(mousepos), True, (0, 0, 0))  # Text, antialias, color
-	text_rect = text_surface.get_rect()
-	text_rect.center = (screen_dim // 2)  # Center the text
-	screen.blit(text_surface, text_rect)
 
 	coord = pixelToCoord(pg.Vector2(mousepos))
 	square = coordToSquare(coord)
@@ -99,7 +95,7 @@ print(board)
 
 background_colour = (234, 212, 252)
 screen = pg.display.set_mode(screen_dim)
-pg.display.set_caption('Geeksforgeeks')
+pg.display.set_caption('CHess')
 pg.display.flip()
 
 pieceTransforms = scaleImages(square_size)
@@ -127,12 +123,45 @@ while running:
 			moved = False
 			for move in highlighted_moves:
 				if square == move.to_square:
-					board.push(move)
+					try:
+						board.push(move)
+					except AssertionError:
+						pass
 					moved = True
+					move_sound.play()
 				drawBoard()
 			if not moved:
 				drawBoard()
 				highlighted_moves = drawAndReturnMoves()
 
-			pg.display.update()
+			if board.turn == chess.WHITE:
+				player = "White"
+			else:
+				player = "Black"
 
+			message = f"{player}'s turn"
+
+			try:
+				if board.is_check():
+					check_sound.play()
+				if board.is_checkmate():
+					checkmate_sound.play()
+					message = f"{player} has won"
+
+				elif board.is_stalemate():
+					message = "Stalemate"
+				elif board.is_insufficient_material():
+					message = "The game is a draw due to insufficient material."
+				elif board.is_seventyfive_moves():
+					message = "The game is a draw due to the seventy-five moves rule."
+				elif board.is_fivefold_repetition():
+					message = "The game is a draw due to fivefold repetition."
+
+				text_surface = font.render(message, True, (0, 0, 0))  # Text, antialias, color
+				text_rect = text_surface.get_rect()
+				text_rect.center = (screen_dim // 2)  # Center the text
+				screen.blit(text_surface, text_rect)
+			except AssertionError:
+				pass
+
+			pg.display.update()

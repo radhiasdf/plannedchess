@@ -1,4 +1,6 @@
 import pygame
+pygame.init()
+
 pieceImgs = {}
 for piece_libname, svg_name in (("K", "kw"),
 								("k","kb"),
@@ -19,5 +21,6 @@ for piece_libname, svg_name in (("K", "kw"),
 
 # By Cburnett - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=1499806
 
-
-numCoordToChessCoord = {}
+move_sound = pygame.mixer.Sound("vine_boom.mp3")
+check_sound = pygame.mixer.Sound("vine_boom.mp3")
+checkmate_sound = pygame.mixer.Sound("vine_boom.mp3")
